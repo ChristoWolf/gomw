@@ -57,13 +57,10 @@ func Middleware(logger *log.Logger) func(http.Handler) http.Handler {
 			if err != nil {
 				err := fmt.Errorf("error reading request body: %w", err)
 				logger.Printf("%v\n", err)
-				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					w.WriteHeader(http.StatusInternalServerError)
-					fmt.Fprint(w, err)
-				}).ServeHTTP(wrapped, r)
-			} else {
-				next.ServeHTTP(wrapped, r)
+				http.Error(wrapped, err.Error(), http.StatusInternalServerError)
+				return
 			}
+			next.ServeHTTP(wrapped, r)
 			logger.Printf("Response: %d %s\n", wrapped.status, string(wrapped.body))
 		})
 	}
