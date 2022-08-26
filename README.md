@@ -6,4 +6,4 @@
 ![Coverage](https://img.shields.io/codecov/c/github/ChristoWolf/go-middleware)
 [![Go report card](https://goreportcard.com/badge/github.com/ChristoWolf/go-middleware)](https://goreportcard.com/report/github.com/ChristoWolf/go-middleware)
 
-A collection of simple go middleware based on `net/http`.
+A collection of simple Go middleware based on `net/http`.
