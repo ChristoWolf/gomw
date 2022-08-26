@@ -1,3 +1,9 @@
+## v1.0.2
+
+### Chores
+
+- Added LICENSE.
+
 ## v1.0.1 (August 26, 2022)
 
 ### Improvements
