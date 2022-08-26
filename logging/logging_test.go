@@ -40,7 +40,7 @@ func TestMiddleware(t *testing.T) {
 			rec := httptest.NewRecorder()
 			writer := strings.Builder{}
 			logger := log.New(&writer, "", log.LstdFlags)
-			sut := logging.Middleware(*logger)(handlerStub)
+			sut := logging.Middleware(logger)(handlerStub)
 			sut.ServeHTTP(rec, req)
 			if rec.Code != row.status {
 				t.Errorf("expected status code %d, got %d", row.status, rec.Code)
@@ -76,7 +76,7 @@ func TestMiddlewareReadErr(t *testing.T) {
 	rec := httptest.NewRecorder()
 	writer := strings.Builder{}
 	logger := log.New(&writer, "", log.LstdFlags)
-	sut := logging.Middleware(*logger)(handlerStub)
+	sut := logging.Middleware(logger)(handlerStub)
 	sut.ServeHTTP(rec, req)
 	wantCode := http.StatusInternalServerError
 	if rec.Code != wantCode {
