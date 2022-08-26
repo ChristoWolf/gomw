@@ -47,7 +47,7 @@ func (w *wrappedResponseWriter) Write(b []byte) (int, error) {
 // Middleware is a middleware for logging information
 // about the request and response.
 // TODO: Log more information (sizes, execution time, etc).
-func Middleware(logger log.Logger) func(http.Handler) http.Handler {
+func Middleware(logger *log.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer r.Body.Close()
