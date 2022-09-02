@@ -15,7 +15,7 @@ const (
 	// responseTemplate is the template for logging responses.
 	responseTemplate = `
 # Response
-{{if .WithDuration}}- Duration: {{printf "%s" .Duration}}{{end}}
+{{if .WithDuration}}- Duration: {{.Duration.Microseconds}}µs{{end}}
 {{if .WithStatus}}- Status: {{.Status}}{{end}}
 {{if .WithContentLength}}- Content length: {{.ContentLength}}{{end}}
 {{if .WithBody}}- Body: {{.Body}}{{end}}

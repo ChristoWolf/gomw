@@ -6,9 +6,11 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/christowolf/go-middleware/logging"
 )
@@ -71,16 +73,9 @@ func TestMiddleware(t *testing.T) {
 			if !strings.Contains(writer.String(), strconv.Itoa(len(row.resp))) {
 				t.Errorf("expected log to contain content length %d, got %s", len(row.resp), writer.String())
 			}
-			if !strings.Contains(writer.String(), "ns") &&
-				!strings.Contains(writer.String(), "us") &&
-				!strings.Contains(writer.String(), "µs") &&
-				!strings.Contains(writer.String(), "ms") &&
-				!strings.Contains(writer.String(), "s") &&
-				!strings.Contains(writer.String(), "m") &&
-				!strings.Contains(writer.String(), "h") {
-				t.Errorf("expected log to contain duration, got %s", writer.String())
+			if !strings.Contains(writer.String(), "µs") {
+				t.Errorf("expected log to contain duration in microseconds, got %s", writer.String())
 			}
-			t.Log(writer.String())
 		})
 	}
 }
@@ -117,7 +112,6 @@ func TestMiddlewareReadErr(t *testing.T) {
 	if !strings.Contains(writer.String(), "error") {
 		t.Errorf("expected log to contain error, got %s", writer.String())
 	}
-	t.Log(writer.String())
 }
 
 // errReader is an io.Reader that always returns an error.
@@ -126,4 +120,48 @@ type errReader struct{}
 // Read always returns an error.
 func (errReader) Read(p []byte) (n int, err error) {
 	return 0, fmt.Errorf("refused to read")
+}
+
+// TestMiddlewareDuration tests if durations are
+// logged with microseconds precision.
+func TestMiddlewareDuration(t *testing.T) {
+	data := []time.Duration{
+		time.Nanosecond,
+		time.Microsecond,
+		time.Millisecond,
+		time.Second,
+	}
+	for _, row := range data {
+		row := row
+		t.Run(row.String(), func(t *testing.T) {
+			// These are not parallelized on purpose
+			// as that would mess with the times
+			// due to goroutine pausing.
+			handlerStub := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				time.Sleep(row)
+			})
+			req := httptest.NewRequest("GET", "/test/endpoint/duration", nil)
+			rec := httptest.NewRecorder()
+			writer := strings.Builder{}
+			logger := log.New(&writer, "", log.LstdFlags)
+			options := logging.NewOptions(
+				logging.WithLogger(logger),
+				logging.WithDuration(true))
+			sut := logging.Middleware(*options)(handlerStub)
+			sut.ServeHTTP(rec, req)
+			logged := writer.String()
+			regex := regexp.MustCompile(`\d+µs`)
+			dur := regex.FindString(logged)
+			if dur == "" {
+				t.Errorf("expected duration to be logged, got %s", logged)
+			}
+			micro, err := time.ParseDuration(dur)
+			if err != nil {
+				t.Errorf("expected duration to be parsed, got error: %v", err)
+			}
+			if micro < row {
+				t.Errorf("expected duration to be at least %s, got %s", row, micro)
+			}
+		})
+	}
 }
