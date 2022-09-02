@@ -40,13 +40,27 @@ func TestMiddleware(t *testing.T) {
 			rec := httptest.NewRecorder()
 			writer := strings.Builder{}
 			logger := log.New(&writer, "", log.LstdFlags)
-			sut := logging.Middleware(logger)(handlerStub)
+			options := logging.NewOptions(
+				logging.WithLogger(logger),
+				logging.WithBodies(true),
+				logging.WithStatus(true),
+				logging.WithMethod(true),
+				logging.WithUrl(true),
+				logging.WithContentLengths(true),
+				logging.WithDuration(true))
+			sut := logging.Middleware(*options)(handlerStub)
 			sut.ServeHTTP(rec, req)
+			if rec.Body.String() != row.resp {
+				t.Errorf("expected response %s, got %s", row.resp, rec.Body.String())
+			}
+			if !strings.Contains(writer.String(), row.resp) {
+				t.Errorf("expected log to contain response %s, got %s", row.resp, writer.String())
+			}
 			if rec.Code != row.status {
 				t.Errorf("expected status code %d, got %d", row.status, rec.Code)
 			}
-			if rec.Body.String() != row.resp {
-				t.Errorf("expected response %s, got %s", row.resp, rec.Body.String())
+			if !strings.Contains(writer.String(), strconv.Itoa(row.status)) {
+				t.Errorf("expected log to contain status %d, got %s", row.status, writer.String())
 			}
 			if !strings.Contains(writer.String(), row.method) {
 				t.Errorf("expected log to contain method %s, got %s", row.method, writer.String())
@@ -54,12 +68,19 @@ func TestMiddleware(t *testing.T) {
 			if !strings.Contains(writer.String(), row.url) {
 				t.Errorf("expected log to contain url %s, got %s", row.url, writer.String())
 			}
-			if !strings.Contains(writer.String(), strconv.Itoa(row.status)) {
-				t.Errorf("expected log to contain status %d, got %s", row.status, writer.String())
+			if !strings.Contains(writer.String(), strconv.Itoa(len(row.resp))) {
+				t.Errorf("expected log to contain content length %d, got %s", len(row.resp), writer.String())
 			}
-			if !strings.Contains(writer.String(), row.resp) {
-				t.Errorf("expected log to contain response %s, got %s", row.resp, writer.String())
+			if !strings.Contains(writer.String(), "ns") &&
+				!strings.Contains(writer.String(), "us") &&
+				!strings.Contains(writer.String(), "µs") &&
+				!strings.Contains(writer.String(), "ms") &&
+				!strings.Contains(writer.String(), "s") &&
+				!strings.Contains(writer.String(), "m") &&
+				!strings.Contains(writer.String(), "h") {
+				t.Errorf("expected log to contain duration, got %s", writer.String())
 			}
+			t.Log(writer.String())
 		})
 	}
 }
@@ -76,7 +97,15 @@ func TestMiddlewareReadErr(t *testing.T) {
 	rec := httptest.NewRecorder()
 	writer := strings.Builder{}
 	logger := log.New(&writer, "", log.LstdFlags)
-	sut := logging.Middleware(logger)(handlerStub)
+	options := logging.NewOptions(
+		logging.WithLogger(logger),
+		logging.WithBodies(true),
+		logging.WithStatus(true),
+		logging.WithMethod(true),
+		logging.WithUrl(true),
+		logging.WithContentLengths(true),
+		logging.WithDuration(true))
+	sut := logging.Middleware(*options)(handlerStub)
 	sut.ServeHTTP(rec, req)
 	wantCode := http.StatusInternalServerError
 	if rec.Code != wantCode {
@@ -88,6 +117,7 @@ func TestMiddlewareReadErr(t *testing.T) {
 	if !strings.Contains(writer.String(), "error") {
 		t.Errorf("expected log to contain error, got %s", writer.String())
 	}
+	t.Log(writer.String())
 }
 
 // errReader is an io.Reader that always returns an error.
