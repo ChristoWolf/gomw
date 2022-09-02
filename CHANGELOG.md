@@ -1,3 +1,15 @@
+## v2.0.0
+
+### Breaking change
+
+- Completely revamped logging middleware API.
+
+### Features
+
+- Made logging middleware configurable.
+- Added more stats to logging middleware.
+- Prettified log output by formatting entries as Markdown.
+
 ## v1.0.2
 
 ### Chores
