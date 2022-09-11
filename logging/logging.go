@@ -47,7 +47,7 @@ func (w *wrappedResponseWriter) Write(b []byte) (int, error) {
 }
 
 // Middleware is a middleware for logging information
-// about the request and response.
+// about requests and responses.
 func Middleware(options Options) func(http.Handler) http.Handler {
 	reqTemplate := template.Must(template.New("request").Parse(requestTemplate))
 	respTemplate := template.Must(template.New("response").Parse(responseTemplate))
