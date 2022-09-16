@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/christowolf/go-middleware/logging"
+	"github.com/christowolf/go-middleware/v2/logging"
 )
 
 // TestMiddleware tests the logging middleware.
