@@ -1,3 +1,9 @@
+## v2.1.0
+
+### Features
+
+- Added `panic` recovering middleware which protects from panics.
+
 ## v2.0.0
 
 ### Breaking change
