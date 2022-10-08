@@ -1,6 +1,6 @@
 # go-middleware
 
-[![Go reference](https://pkg.go.dev/badge/github.com/christowolf/go-middleware.svg)](https://pkg.go.dev/github.com/christowolf/go-middleware/v2)
+[![Go reference](https://pkg.go.dev/badge/github.com/christowolf/go-middleware.svg)](https://pkg.go.dev/github.com/christowolf/go-middleware)
 ![Release](https://img.shields.io/github/v/release/ChristoWolf/go-middleware)
 ![Build](https://img.shields.io/github/workflow/status/ChristoWolf/go-middleware/Go/main)
 ![Coverage](https://img.shields.io/codecov/c/github/ChristoWolf/go-middleware)
