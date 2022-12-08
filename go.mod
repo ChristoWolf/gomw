@@ -1,3 +1,3 @@
-module github.com/christowolf/go-middleware
+module github.com/christowolf/gomw
 
 go 1.19

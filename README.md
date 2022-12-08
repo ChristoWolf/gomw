@@ -1,9 +1,9 @@
-# go-middleware
+# gomw
 
-[![Go reference](https://pkg.go.dev/badge/github.com/christowolf/go-middleware.svg)](https://pkg.go.dev/github.com/christowolf/go-middleware)
-![Release](https://img.shields.io/github/v/release/ChristoWolf/go-middleware)
-![Build](https://img.shields.io/github/workflow/status/ChristoWolf/go-middleware/Go/main)
-![Coverage](https://img.shields.io/codecov/c/github/ChristoWolf/go-middleware)
-[![Go report card](https://goreportcard.com/badge/github.com/ChristoWolf/go-middleware)](https://goreportcard.com/report/github.com/ChristoWolf/go-middleware)
+[![Go reference](https://pkg.go.dev/badge/github.com/christowolf/gomw.svg)](https://pkg.go.dev/github.com/christowolf/gomw)
+![Release](https://img.shields.io/github/v/release/ChristoWolf/gomw)
+![Build](https://img.shields.io/github/workflow/status/ChristoWolf/gomw/Go/main)
+![Coverage](https://img.shields.io/codecov/c/github/ChristoWolf/gomw)
+[![Go report card](https://goreportcard.com/badge/github.com/ChristoWolf/gomw)](https://goreportcard.com/report/github.com/ChristoWolf/gomw)
 
 A collection of simple Go middleware based on `net/http`.

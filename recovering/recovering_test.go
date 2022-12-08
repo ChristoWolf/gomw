@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/christowolf/go-middleware/recovering"
+	"github.com/christowolf/gomw/recovering"
 )
 
 // TestMiddleware tests the recovering middleware

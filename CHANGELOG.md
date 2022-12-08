@@ -1,4 +1,4 @@
-## v0.1.0 (October 8, 2022)
+## v0.1.0 (December 8, 2022)
 
 - Initial release after migrating from another repository.
 
