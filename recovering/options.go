@@ -6,8 +6,12 @@ type Options struct {
 	withStackTrace bool
 }
 
+// Option is a function that configures the middleware
+// via the functional options pattern.
+type Option func(*Options)
+
 // NewOptions creates functionally injectable Options.
-func NewOptions(options ...func(*Options)) *Options {
+func NewOptions(options ...Option) *Options {
 	opts := &Options{}
 	for _, option := range options {
 		option(opts)
@@ -20,7 +24,7 @@ func NewOptions(options ...func(*Options)) *Options {
 // See the GOTRACEBACK environment variable
 // (https://pkg.go.dev/runtime#hdr-Environment_Variables)
 // on how to configure the stack trace level.
-func WithStackTrace() func(*Options) {
+func WithStackTrace() Option {
 	return func(o *Options) {
 		o.withStackTrace = true
 	}
